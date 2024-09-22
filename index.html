@@ -125,6 +125,8 @@
                 <span class="close">&times;</span>
                 <img class="modal-content" id="modalImage">
                 <div id="caption"></div>
+                <!-- Download Button -->
+                <a id="downloadButton" href="#" download class="btn-download">Download Image</a>
               </div>
             </div>
           </section>
@@ -186,28 +188,43 @@
     <!-- typewriting js -->
     <script src = "typewriting-master/typewriting.js"></script>
     <script>
-         // Get modal elements
-  var modal = document.getElementById("imageModal");
-  var modalImg = document.getElementById("modalImage");
-  var captionText = document.getElementById("caption");
+// Get modal elements
+var modal = document.getElementById("imageModal");
+var modalImg = document.getElementById("modalImage");
+var captionText = document.getElementById("caption");
+var downloadButton = document.getElementById("downloadButton"); // Download button
 
-  // Get all images in the portfolio grid and add click event listeners
-  var images = document.querySelectorAll('.portfolio-grid img');
-  images.forEach(function(image) {
-    image.onclick = function() {
-      modal.style.display = "flex";  // Show the modal when an image is clicked
-      modalImg.src = this.src;
-      captionText.innerHTML = "Image " + this.dataset.index; // Set the caption
-    };
-  });
+// Get all images in the portfolio grid and add click event listeners
+var images = document.querySelectorAll('.portfolio-grid img');
+images.forEach(function(image) {
+  image.onclick = function() {
+    modal.style.display = "flex";  // Show the modal when an image is clicked
+    modalImg.src = this.src;
+    captionText.innerHTML = "Image " + this.dataset.index; // Set the caption
 
-  // Get the <span> element that closes the modal
-  var closeModal = document.getElementsByClassName("close")[0];
+    // Set the download button href to the current image src
+    downloadButton.href = this.src;
 
-  // When the user clicks on <span> (x), close the modal
-  closeModal.onclick = function() { 
-    modal.style.display = "none";  // Hide the modal when close button is clicked
+    // Set the download attribute to trigger the download with the image name
+    downloadButton.setAttribute('download', this.src.split('/').pop());
   };
+});
+
+// Prevent default action if download is not working due to cross-origin
+downloadButton.addEventListener('click', function(event) {
+  if (!downloadButton.href.startsWith(window.location.origin)) {
+    event.preventDefault();  // Prevent redirecting if it's cross-origin
+    alert("Unable to download due to cross-origin restrictions.");
+  }
+});
+
+// Get the <span> element that closes the modal
+var closeModal = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+closeModal.onclick = function() { 
+  modal.style.display = "none";  // Hide the modal when close button is clicked
+};
       </script>
     
 </body>
